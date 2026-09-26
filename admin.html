@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Admin — Pokédex da Guild</title>
+  <link rel="stylesheet" href="/styles/theme.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>⚙️ Admin</h1>
+    <div style="display:flex; gap:8px;">
+      <a class="header-link" href="/index.html">Ver catálogo</a>
+      <button class="header-link hidden" id="btn-logout" style="cursor:pointer;">Sair</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Login -->
+    <section id="login-section" class="login-wrap">
+      <h1>Login</h1>
+      <form id="login-form">
+        <div class="field">
+          <label for="login-email">E-mail</label>
+          <input type="email" id="login-email" required autocomplete="username" />
+        </div>
+        <div class="field">
+          <label for="login-password">Senha</label>
+          <input type="password" id="login-password" required autocomplete="current-password" />
+        </div>
+        <div id="login-error" class="field-error hidden"></div>
+        <button type="submit" class="btn">Entrar</button>
+      </form>
+    </section>
+
+    <!-- Lista de pokemons (admin logado) -->
+    <section id="list-section" class="hidden">
+      <div class="admin-toolbar">
+        <strong id="list-count"></strong>
+        <button class="btn" id="btn-novo" style="width:auto;">+ Adicionar pokémon</button>
+      </div>
+      <div id="admin-list"></div>
+    </section>
+
+    <!-- Formulário de cadastro/edição -->
+    <section id="form-section" class="hidden">
+      <h2 id="form-title">Novo pokémon</h2>
+      <form id="pokemon-form">
+        <input type="hidden" id="f-id" />
+
+        <div class="field">
+          <label for="f-nome">Nome *</label>
+          <input type="text" id="f-nome" required />
+        </div>
+
+        <div class="field">
+          <label for="f-imagem">Imagem</label>
+          <input type="file" id="f-imagem" accept="image/*" />
+          <img id="f-imagem-preview" class="hidden" style="width:80px;height:80px;object-fit:cover;border-radius:10px;margin-top:8px;" />
+        </div>
+
+        <div class="row-2">
+          <div class="field">
+            <label for="f-nivel">Nível</label>
+            <input type="number" id="f-nivel" min="1" value="1" />
+          </div>
+          <div class="field">
+            <label for="f-raridade">Raridade</label>
+            <select id="f-raridade">
+              <option value="Normal">Normal</option>
+              <option value="Rara">Rara</option>
+              <option value="Épica">Épica</option>
+              <option value="Lendária">Lendária</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="f-raridade-mult">Multiplicador de raridade</label>
+          <input type="text" id="f-raridade-mult" placeholder="Ex: x1.60 / x1.69" />
+        </div>
+
+        <div class="field">
+          <label for="f-tipos">Tipos (separados por vírgula)</label>
+          <input type="text" id="f-tipos" placeholder="Ex: voador, dragão" />
+        </div>
+
+        <div class="row-2">
+          <div class="field">
+            <label for="f-hp-atual">HP atual</label>
+            <input type="number" id="f-hp-atual" />
+          </div>
+          <div class="field">
+            <label for="f-hp-max">HP máximo</label>
+            <input type="number" id="f-hp-max" />
+          </div>
+        </div>
+
+        <div class="row-2">
+          <div class="field">
+            <label for="f-poder-total">Poder total c/ maestria</label>
+            <input type="number" id="f-poder-total" />
+          </div>
+          <div class="field">
+            <label for="f-maestria-elemental">Maestria elemental</label>
+            <input type="text" id="f-maestria-elemental" placeholder="Ex: +0.84% ATQ" />
+          </div>
+        </div>
+
+        <div class="row-2">
+          <div class="field">
+            <label for="f-iv-total">IV total</label>
+            <input type="number" id="f-iv-total" />
+          </div>
+          <div class="field">
+            <label for="f-iv-max">IV máximo</label>
+            <input type="number" id="f-iv-max" />
+          </div>
+        </div>
+
+        <div class="section-title">Atributos de batalha (valor · IV)</div>
+        <div class="row-2">
+          <div class="field"><label>HP</label><input type="text" id="f-attr-hp" placeholder="108 · 21/31" /></div>
+          <div class="field"><label>ATK</label><input type="text" id="f-attr-atk" placeholder="18 · 31/31" /></div>
+        </div>
+        <div class="row-2">
+          <div class="field"><label>ATK SP</label><input type="text" id="f-attr-atksp" placeholder="18 · 31/31" /></div>
+          <div class="field"><label>DEF</label><input type="text" id="f-attr-def" placeholder="18 · 30/31" /></div>
+        </div>
+        <div class="row-2">
+          <div class="field"><label>DEF SP</label><input type="text" id="f-attr-defsp" placeholder="18 · 30/31 (baixa)" /></div>
+          <div class="field"><label>VEL</label><input type="text" id="f-attr-vel" placeholder="18 · 21/31 (alta)" /></div>
+        </div>
+
+        <div class="section-title">Genética</div>
+        <div class="row-2">
+          <div class="field"><label>Natureza</label><input type="text" id="f-natureza" /></div>
+          <div class="field"><label>Gênero</label>
+            <select id="f-genero">
+              <option value="">-</option>
+              <option value="Macho">Macho</option>
+              <option value="Fêmea">Fêmea</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label>Ganho/perda</label>
+          <input type="text" id="f-ganho-perda" placeholder="▲ Velocidade / ▼ Def. Esp." />
+        </div>
+        <div class="field">
+          <label>Bônus extra</label>
+          <input type="text" id="f-bonus-extra" placeholder="▲ HP +10%" />
+        </div>
+
+        <div class="section-title">Controle de empréstimo e venda</div>
+
+        <div class="toggle-row">
+          <span>Emprestado</span>
+          <label class="switch">
+            <input type="checkbox" id="f-emprestado" />
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="field" id="wrap-emprestado-para">
+          <label for="f-emprestado-para">Emprestado para</label>
+          <input type="text" id="f-emprestado-para" placeholder="Nome de quem está com o pokémon" />
+        </div>
+
+        <div class="toggle-row">
+          <span>Disponível para venda</span>
+          <label class="switch">
+            <input type="checkbox" id="f-venda" />
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="field" id="wrap-preco">
+          <label for="f-preco">Preço (deixe em branco para "Aceita lances")</label>
+          <input type="number" id="f-preco" step="0.01" min="0" />
+        </div>
+        <div class="field" id="wrap-whatsapp">
+          <label for="f-whatsapp">WhatsApp para contato (com DDI+DDD, só números)</label>
+          <input type="text" id="f-whatsapp" placeholder="5511999999999" />
+        </div>
+
+        <div id="form-error" class="field-error hidden"></div>
+
+        <div class="form-actions">
+          <button type="button" class="btn secondary" id="btn-cancelar">Cancelar</button>
+          <button type="submit" class="btn" id="btn-salvar">Salvar</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script type="module" src="/src/admin.js"></script>
+</body>
+</html>
