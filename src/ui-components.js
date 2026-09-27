@@ -44,6 +44,7 @@ export function renderCard(pokemon) {
         <div class="meta">
           <span class="pill level">Nv. ${pokemon.nivel ?? '?'}</span>
           ${pokemon.raridade ? `<span class="pill ${raridadeClass}">${escapeHtml(pokemon.raridade)}</span>` : ''}
+          ${(pokemon.tipos || []).map((t) => `<span class="pill tipo">${escapeHtml(t)}</span>`).join('')}
         </div>
       </div>
     </div>
@@ -95,6 +96,7 @@ export function renderDetail(pokemon) {
         <div class="meta">
           <span class="pill level">Nv. ${pokemon.nivel ?? '?'}</span>
           ${pokemon.raridade ? `<span class="pill ${raridadePillClass(pokemon.raridade)}">${escapeHtml(pokemon.raridade)} ${escapeHtml(pokemon.raridade_multiplicador || '')}</span>` : ''}
+          ${(pokemon.tipos || []).map((t) => `<span class="pill tipo">${escapeHtml(t)}</span>`).join('')}
         </div>
       </div>
     </div>

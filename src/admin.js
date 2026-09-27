@@ -1,4 +1,5 @@
 import { supabase, POKEMON_BUCKET } from './supabase.js';
+import { TIPOS_POKEMON } from './pokemon-types.js';
 
 const loginSection = document.getElementById('login-section');
 const listSection = document.getElementById('list-section');
@@ -24,10 +25,21 @@ const wrapPreco = document.getElementById('wrap-preco');
 const wrapWhatsapp = document.getElementById('wrap-whatsapp');
 const fImagem = document.getElementById('f-imagem');
 const fImagemPreview = document.getElementById('f-imagem-preview');
+const fTipo1 = document.getElementById('f-tipo1');
+const fTipo2 = document.getElementById('f-tipo2');
 
 let pokemons = [];
 let imagemArquivo = null;
 let imagemUrlAtual = '';
+
+function popularSelectTipos(select, comOpcaoVazia) {
+  select.innerHTML =
+    (comOpcaoVazia ? '<option value="">-</option>' : '<option value="">Selecione...</option>') +
+    TIPOS_POKEMON.map((t) => `<option value="${t}">${t}</option>`).join('');
+}
+
+popularSelectTipos(fTipo1, false);
+popularSelectTipos(fTipo2, true);
 
 function showSection(section) {
   [loginSection, listSection, formSection].forEach((s) => s.classList.add('hidden'));
@@ -187,7 +199,9 @@ function abrirFormulario(pokemon) {
   document.getElementById('f-nivel').value = pokemon?.nivel ?? 1;
   document.getElementById('f-raridade').value = pokemon?.raridade || 'Normal';
   document.getElementById('f-raridade-mult').value = pokemon?.raridade_multiplicador || '';
-  document.getElementById('f-tipos').value = (pokemon?.tipos || []).join(', ');
+  const tipos = pokemon?.tipos || [];
+  fTipo1.value = tipos[0] || '';
+  fTipo2.value = tipos[1] || '';
   document.getElementById('f-hp-atual').value = pokemon?.hp_atual ?? '';
   document.getElementById('f-hp-max').value = pokemon?.hp_max ?? '';
   document.getElementById('f-poder-total').value = pokemon?.poder_total_maestria ?? '';
@@ -249,11 +263,7 @@ pokemonForm.addEventListener('submit', async (e) => {
   try {
     const imagemUrl = await uploadImagemSeNecessario();
 
-    const tipos = document
-      .getElementById('f-tipos')
-      .value.split(',')
-      .map((t) => t.trim())
-      .filter(Boolean);
+    const tipos = [fTipo1.value, fTipo2.value].filter(Boolean);
 
     const payload = {
       nome: document.getElementById('f-nome').value.trim(),

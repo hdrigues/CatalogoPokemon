@@ -176,6 +176,33 @@ main {
   font-weight: 400;
 }
 
+.filters-extra {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.filters-extra select,
+.filters-extra input {
+  background: var(--card);
+  border: 2px solid var(--card-border-soft);
+  color: var(--text);
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+}
+
+.filters-extra select {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.filters-extra input {
+  width: 110px;
+  flex: 0 0 auto;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -334,6 +361,11 @@ main {
 }
 .pill.raridade-normal {
   color: var(--text-dim);
+}
+
+.pill.tipo {
+  color: var(--teal);
+  border-color: var(--teal);
 }
 
 /* ---------- Modal de detalhes ---------- */
