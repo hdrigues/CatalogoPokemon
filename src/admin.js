@@ -27,10 +27,17 @@ const fImagem = document.getElementById('f-imagem');
 const fImagemPreview = document.getElementById('f-imagem-preview');
 const fTipo1 = document.getElementById('f-tipo1');
 const fTipo2 = document.getElementById('f-tipo2');
+const fDono = document.getElementById('f-dono');
+const wrapImagemUpload = document.getElementById('wrap-imagem-upload');
+const wrapImagemPokeapi = document.getElementById('wrap-imagem-pokeapi');
+const fPokeapiBusca = document.getElementById('f-pokeapi-busca');
+const fPokeapiResultados = document.getElementById('f-pokeapi-resultados');
+const adminFiltersEl = document.getElementById('admin-filters');
 
 let pokemons = [];
 let imagemArquivo = null;
 let imagemUrlAtual = '';
+let filtroAdminAtivo = 'todos';
 
 function popularSelectTipos(select, comOpcaoVazia) {
   select.innerHTML =
@@ -62,6 +69,78 @@ fImagem.addEventListener('change', () => {
   imagemArquivo = file;
   fImagemPreview.src = URL.createObjectURL(file);
   fImagemPreview.classList.remove('hidden');
+});
+
+// ---------- PokéAPI ----------
+
+let pokeapiListaNomes = null;
+
+async function carregarListaPokeapi() {
+  if (pokeapiListaNomes) return pokeapiListaNomes;
+  const resp = await fetch('https://pokeapi.co/api/v2/pokemon?limit=2000');
+  const json = await resp.json();
+  pokeapiListaNomes = json.results.map((p) => p.name);
+  return pokeapiListaNomes;
+}
+
+document.querySelectorAll('input[name="f-imagem-modo"]').forEach((radio) => {
+  radio.addEventListener('change', () => {
+    const usaPokeapi = document.getElementById('f-imagem-modo-pokeapi').checked;
+    toggleWrap(wrapImagemUpload, !usaPokeapi);
+    toggleWrap(wrapImagemPokeapi, usaPokeapi);
+    if (usaPokeapi) carregarListaPokeapi();
+  });
+});
+
+let pokeapiBuscaTimeout = null;
+fPokeapiBusca.addEventListener('input', () => {
+  clearTimeout(pokeapiBuscaTimeout);
+  const termo = fPokeapiBusca.value.trim().toLowerCase();
+  if (!termo) {
+    fPokeapiResultados.classList.add('hidden');
+    fPokeapiResultados.innerHTML = '';
+    return;
+  }
+  pokeapiBuscaTimeout = setTimeout(async () => {
+    const nomes = await carregarListaPokeapi();
+    const encontrados = nomes.filter((n) => n.includes(termo)).slice(0, 8);
+    if (!encontrados.length) {
+      fPokeapiResultados.innerHTML = '<div style="padding:8px 10px; color:var(--text-dim);">Nenhum resultado</div>';
+      fPokeapiResultados.classList.remove('hidden');
+      return;
+    }
+    fPokeapiResultados.innerHTML = encontrados
+      .map((n) => `<button type="button" data-nome="${n}">${n}</button>`)
+      .join('');
+    fPokeapiResultados.classList.remove('hidden');
+  }, 300);
+});
+
+fPokeapiResultados.addEventListener('click', async (e) => {
+  const btn = e.target.closest('button[data-nome]');
+  if (!btn) return;
+  const nome = btn.dataset.nome;
+  btn.disabled = true;
+  btn.textContent = `Carregando ${nome}...`;
+  try {
+    const resp = await fetch(`https://pokeapi.co/api/v2/pokemon/${nome}`);
+    const data = await resp.json();
+    const url =
+      data.sprites?.other?.['official-artwork']?.front_default ||
+      data.sprites?.front_default;
+    if (!url) throw new Error('Sem imagem disponível para esse pokémon.');
+
+    imagemArquivo = null;
+    imagemUrlAtual = url;
+    fImagemPreview.src = url;
+    fImagemPreview.classList.remove('hidden');
+    fPokeapiBusca.value = nome;
+    fPokeapiResultados.classList.add('hidden');
+    fPokeapiResultados.innerHTML = '';
+  } catch (err) {
+    formError.textContent = err.message;
+    formError.classList.remove('hidden');
+  }
 });
 
 // ---------- Auth ----------
@@ -111,13 +190,34 @@ async function carregarLista() {
   renderLista();
 }
 
+function aplicarFiltroAdmin(lista) {
+  switch (filtroAdminAtivo) {
+    case 'emprestado':
+      return lista.filter((p) => p.status === 'emprestado');
+    case 'venda':
+      return lista.filter((p) => p.disponivel_para_venda);
+    default:
+      return lista;
+  }
+}
+
+adminFiltersEl.addEventListener('click', (e) => {
+  const btn = e.target.closest('.filter-btn');
+  if (!btn) return;
+  filtroAdminAtivo = btn.dataset.filter;
+  adminFiltersEl.querySelectorAll('.filter-btn').forEach((b) => b.classList.toggle('active', b === btn));
+  renderLista();
+});
+
 function renderLista() {
-  if (!pokemons.length) {
-    adminList.innerHTML = '<div class="empty-state">Nenhum pokémon cadastrado ainda.</div>';
+  const lista = aplicarFiltroAdmin(pokemons);
+
+  if (!lista.length) {
+    adminList.innerHTML = '<div class="empty-state">Nenhum pokémon encontrado.</div>';
     return;
   }
 
-  adminList.innerHTML = pokemons
+  adminList.innerHTML = lista
     .map(
       (p) => `
     <div class="admin-list-item">
@@ -126,6 +226,9 @@ function renderLista() {
         <div class="name">${p.nome}</div>
         <div style="font-size:0.78rem; color:var(--text-dim);">
           Nv. ${p.nivel ?? '?'} · ${p.status === 'emprestado' ? 'Emprestado' : 'Disponível'}${p.disponivel_para_venda ? ' · À venda' : ''}
+        </div>
+        <div style="font-size:0.78rem; color:var(--orange);">
+          ${p.raridade ? p.raridade : ''}${p.raridade_multiplicador ? ` · ${p.raridade_multiplicador}` : ''}
         </div>
       </div>
       <div class="actions">
@@ -193,9 +296,17 @@ function abrirFormulario(pokemon) {
   fImagemPreview.src = imagemUrlAtual;
   fImagemPreview.classList.toggle('hidden', !imagemUrlAtual);
 
+  document.getElementById('f-imagem-modo-upload').checked = true;
+  toggleWrap(wrapImagemUpload, true);
+  toggleWrap(wrapImagemPokeapi, false);
+  fPokeapiBusca.value = '';
+  fPokeapiResultados.classList.add('hidden');
+  fPokeapiResultados.innerHTML = '';
+
   formTitle.textContent = pokemon ? `Editar: ${pokemon.nome}` : 'Novo pokémon';
   document.getElementById('f-id').value = pokemon?.id || '';
   document.getElementById('f-nome').value = pokemon?.nome || '';
+  fDono.value = pokemon?.dono || '';
   document.getElementById('f-nivel').value = pokemon?.nivel ?? 1;
   document.getElementById('f-raridade').value = pokemon?.raridade || 'Normal';
   document.getElementById('f-raridade-mult').value = pokemon?.raridade_multiplicador || '';
@@ -267,6 +378,7 @@ pokemonForm.addEventListener('submit', async (e) => {
 
     const payload = {
       nome: document.getElementById('f-nome').value.trim(),
+      dono: fDono.value.trim() || null,
       imagem_url: imagemUrl,
       nivel: Number(document.getElementById('f-nivel').value) || 1,
       raridade: document.getElementById('f-raridade').value,

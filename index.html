@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <title>Pokédex da Guild</title>
+  <title>Catálogo ZS</title>
   <link rel="stylesheet" href="/styles/theme.css" />
 </head>
 <body>
   <header class="app-header">
-    <h1><span class="pokeball-icon"></span>Pokédex da Guild</h1>
+    <h1><span class="pokeball-icon"></span>Catálogo ZS</h1>
     <a class="header-link" href="admin.html">Admin</a>
   </header>
 
@@ -24,7 +24,11 @@
       <select id="filtro-elemento">
         <option value="todos">Todos os elementos</option>
       </select>
-      <input type="number" id="filtro-nivel" min="1" placeholder="Nível mín." />
+      <select id="filtro-ordenar">
+        <option value="nome">Nome (A-Z)</option>
+        <option value="nivel-desc">Nível: maior → menor</option>
+        <option value="nivel-asc">Nível: menor → maior</option>
+      </select>
     </div>
 
     <div id="grid" class="grid">

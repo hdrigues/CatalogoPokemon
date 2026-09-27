@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <title>Admin — Pokédex da Guild</title>
+  <title>Admin — Catálogo ZS</title>
   <link rel="stylesheet" href="/styles/theme.css" />
 </head>
 <body>
@@ -39,6 +39,11 @@
         <strong id="list-count"></strong>
         <button class="btn" id="btn-novo" style="width:auto;">+ Adicionar pokémon</button>
       </div>
+      <div class="filters" id="admin-filters">
+        <button class="filter-btn active" data-filter="todos">Todos</button>
+        <button class="filter-btn" data-filter="emprestado">Emprestados</button>
+        <button class="filter-btn" data-filter="venda">À venda</button>
+      </div>
       <div id="admin-list"></div>
     </section>
 
@@ -54,8 +59,32 @@
         </div>
 
         <div class="field">
-          <label for="f-imagem">Imagem</label>
-          <input type="file" id="f-imagem" accept="image/*" />
+          <label for="f-dono">Dono (de quem é esse pokémon)</label>
+          <input type="text" id="f-dono" placeholder="Nome do dono" />
+        </div>
+
+        <div class="field">
+          <label>Imagem</label>
+          <div class="toggle-row" style="margin-bottom:10px;">
+            <label style="display:flex; align-items:center; gap:6px; font-size:0.85rem; cursor:pointer;">
+              <input type="radio" name="f-imagem-modo" id="f-imagem-modo-upload" value="upload" checked />
+              Enviar arquivo
+            </label>
+            <label style="display:flex; align-items:center; gap:6px; font-size:0.85rem; cursor:pointer;">
+              <input type="radio" name="f-imagem-modo" id="f-imagem-modo-pokeapi" value="pokeapi" />
+              Usar imagem da PokéAPI
+            </label>
+          </div>
+
+          <div id="wrap-imagem-upload">
+            <input type="file" id="f-imagem" accept="image/*" />
+          </div>
+
+          <div id="wrap-imagem-pokeapi" class="hidden">
+            <input type="text" id="f-pokeapi-busca" placeholder="Buscar pokémon (ex: pikachu)" autocomplete="off" />
+            <div id="f-pokeapi-resultados" class="pokeapi-resultados hidden"></div>
+          </div>
+
           <img id="f-imagem-preview" class="hidden" style="width:80px;height:80px;object-fit:cover;border-radius:10px;margin-top:8px;" />
         </div>
 

@@ -328,6 +328,13 @@ main {
   color: var(--text);
 }
 
+.rarity-score {
+  font-family: var(--font-pixel);
+  font-size: 0.55rem;
+  color: var(--orange);
+  margin: 0 0 8px;
+}
+
 .poke-card .meta {
   display: flex;
   align-items: center;
@@ -656,6 +663,46 @@ main {
   width: 100%;
   color: var(--text-dim);
   font-size: 0.9rem;
+}
+
+.pokeapi-resultados {
+  margin-top: 6px;
+  max-height: 180px;
+  overflow-y: auto;
+  border: 2px solid var(--card-border-soft);
+  border-radius: 8px;
+  background: var(--bg-elevated);
+}
+
+.pokeapi-resultados button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--card-border-soft);
+  color: var(--text);
+  padding: 8px 10px;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  text-transform: capitalize;
+}
+
+.pokeapi-resultados button:last-child {
+  border-bottom: none;
+}
+
+.pokeapi-resultados button:hover {
+  background: var(--card);
+}
+
+.pokeapi-resultados img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
 }
 
 .field-error {

@@ -41,6 +41,7 @@ export function renderCard(pokemon) {
       ${pokemon.disponivel_para_venda ? '<span class="badge-venda">À VENDA</span>' : ''}
       <div class="info">
         <p class="name">${escapeHtml(pokemon.nome)}</p>
+        ${pokemon.raridade_multiplicador ? `<p class="rarity-score">${escapeHtml(pokemon.raridade_multiplicador)}</p>` : ''}
         <div class="meta">
           <span class="pill level">Nv. ${pokemon.nivel ?? '?'}</span>
           ${pokemon.raridade ? `<span class="pill ${raridadeClass}">${escapeHtml(pokemon.raridade)}</span>` : ''}
@@ -101,9 +102,15 @@ export function renderDetail(pokemon) {
       </div>
     </div>
 
+    ${pokemon.dono ? `
+    <div class="card-block">
+      <div class="label">Dono</div>
+      <div class="value" style="font-size:1rem;">${escapeHtml(pokemon.dono)}</div>
+    </div>` : ''}
+
     <div class="status-banner ${emprestado ? 'emprestado' : 'disponivel'}">
       ${emprestado
-        ? `🔒 Emprestado para <strong>&nbsp;${escapeHtml(pokemon.emprestado_para || 'desconhecido')}</strong>`
+        ? `🔒 Emprestado para <strong>&nbsp;${escapeHtml(pokemon.emprestado_para || 'desconhecido')}</strong>${pokemon.dono ? ` <span style="opacity:0.8;">(devolver para ${escapeHtml(pokemon.dono)})</span>` : ''}`
         : '✅ Disponível para empréstimo'}
     </div>
 

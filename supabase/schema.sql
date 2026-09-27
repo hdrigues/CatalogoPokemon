@@ -26,7 +26,9 @@ create table if not exists pokemons (
 
   disponivel_para_venda boolean not null default false,
   preco_venda numeric,
-  whatsapp_numero text
+  whatsapp_numero text,
+
+  dono text
 );
 
 alter table pokemons enable row level security;

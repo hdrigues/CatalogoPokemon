@@ -7,7 +7,7 @@ const filtersEl = document.getElementById('filters');
 const modalOverlay = document.getElementById('modal-overlay');
 const modalSheet = document.getElementById('modal-sheet');
 const filtroElementoEl = document.getElementById('filtro-elemento');
-const filtroNivelEl = document.getElementById('filtro-nivel');
+const filtroOrdenarEl = document.getElementById('filtro-ordenar');
 
 filtroElementoEl.innerHTML +=
   TIPOS_POKEMON.map((t) => `<option value="${t}">${t}</option>`).join('');
@@ -15,7 +15,7 @@ filtroElementoEl.innerHTML +=
 let pokemons = [];
 let filtroAtivo = 'todos';
 let filtroElemento = 'todos';
-let filtroNivelMin = null;
+let ordenarPor = 'nome';
 
 async function carregarPokemons() {
   const { data, error } = await supabase
@@ -51,9 +51,16 @@ function aplicarFiltro(lista) {
     resultado = resultado.filter((p) => (p.tipos || []).includes(filtroElemento));
   }
 
-  if (filtroNivelMin != null) {
-    resultado = resultado.filter((p) => (p.nivel ?? 0) >= filtroNivelMin);
-  }
+  resultado = [...resultado].sort((a, b) => {
+    switch (ordenarPor) {
+      case 'nivel-desc':
+        return (b.nivel ?? 0) - (a.nivel ?? 0);
+      case 'nivel-asc':
+        return (a.nivel ?? 0) - (b.nivel ?? 0);
+      default:
+        return (a.nome || '').localeCompare(b.nome || '', 'pt-BR');
+    }
+  });
 
   return resultado;
 }
@@ -105,9 +112,8 @@ filtroElementoEl.addEventListener('change', () => {
   render();
 });
 
-filtroNivelEl.addEventListener('input', () => {
-  const v = filtroNivelEl.value;
-  filtroNivelMin = v === '' ? null : Number(v);
+filtroOrdenarEl.addEventListener('change', () => {
+  ordenarPor = filtroOrdenarEl.value;
   render();
 });
 
