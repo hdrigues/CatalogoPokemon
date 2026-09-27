@@ -2,6 +2,7 @@ import { WHATSAPP_NUMERO } from './supabase.js';
 
 export function raridadePillClass(raridade) {
   const r = (raridade || '').toLowerCase();
+  if (r.includes('mít') || r.includes('mit')) return 'raridade-mitica';
   if (r.includes('lend')) return 'raridade-lendaria';
   if (r.includes('rara') || r.includes('épica') || r.includes('epica')) return 'raridade-rara';
   return 'raridade-normal';

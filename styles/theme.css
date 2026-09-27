@@ -370,6 +370,11 @@ main {
   color: var(--text-dim);
 }
 
+.pill.raridade-mitica {
+  color: #ff5ca0;
+  border-color: #ff5ca0;
+}
+
 .pill.tipo {
   color: var(--teal);
   border-color: var(--teal);
