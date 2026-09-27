@@ -35,7 +35,9 @@ export function renderCard(pokemon) {
       <div class="img-wrap">
         <img src="${pokemonImageUrl(pokemon)}" alt="${escapeHtml(pokemon.nome)}" loading="lazy" />
       </div>
-      ${emprestado ? '<span class="badge-emprestado">EMPRESTADO</span>' : ''}
+      ${emprestado
+        ? '<span class="badge-emprestado">EMPRESTADO</span>'
+        : '<span class="badge-status">DISPONÍVEL</span>'}
       ${pokemon.disponivel_para_venda ? '<span class="badge-venda">À VENDA</span>' : ''}
       <div class="info">
         <p class="name">${escapeHtml(pokemon.nome)}</p>

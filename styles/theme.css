@@ -1,17 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
+
 :root {
-  --bg: #0f1420;
-  --bg-elevated: #171d2c;
-  --card: #1c2333;
-  --card-border: #2a3346;
-  --text: #eef1f7;
-  --text-dim: #8b93a7;
-  --accent: #4da3ff;
-  --accent-2: #7b5cff;
-  --green: #4cd97b;
-  --red: #ff5c6c;
+  --bg: #0a1330;
+  --bg-elevated: #101d3f;
+  --card: #16274d;
+  --card-border: #3d6bb0;
+  --card-border-soft: #22407a;
+  --text: #eaf1ff;
+  --text-dim: #93a7cf;
+  --accent: #4fa3ff;
+  --accent-2: #b083ff;
+  --green: #3ddb8f;
+  --red: #ff6b5e;
+  --orange: #ff9a3d;
   --yellow: #ffcf4d;
-  --orange: #ff9a4d;
-  --radius: 14px;
+  --teal: #33e6c8;
+  --radius: 10px;
+  --pixel: 6px;
+  --font-pixel: 'Press Start 2P', monospace;
+  --font-body: 'VT323', 'Segoe UI', monospace;
+  --icon-pokeball: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='%23fff' stroke='%23222' stroke-width='2'/%3E%3Cpath d='M2 12a10 10 0 0 1 20 0z' fill='%23ff5252'/%3E%3Cline x1='2' y1='12' x2='22' y2='12' stroke='%23222' stroke-width='2'/%3E%3Ccircle cx='12' cy='12' r='3.2' fill='%23fff' stroke='%23222' stroke-width='2'/%3E%3C/svg%3E");
 }
 
 * {
@@ -23,55 +31,101 @@ html, body {
   padding: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+  font-family: var(--font-body);
+  font-size: 1.05rem;
   -webkit-font-smoothing: antialiased;
+  image-rendering: pixelated;
 }
 
 body {
   padding-bottom: 32px;
+  background:
+    radial-gradient(circle at 15% 0%, #1b3a73 0%, transparent 45%),
+    radial-gradient(circle at 90% 10%, #163062 0%, transparent 40%),
+    var(--bg);
 }
 
 a {
   color: var(--accent);
 }
 
+.pixel-frame {
+  clip-path: polygon(
+    var(--pixel) 0, calc(100% - var(--pixel)) 0,
+    100% var(--pixel), 100% calc(100% - var(--pixel)),
+    calc(100% - var(--pixel)) 100%, var(--pixel) 100%,
+    0 calc(100% - var(--pixel)), 0 var(--pixel)
+  );
+}
+
+.pokeball-icon {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  background-image: var(--icon-pokeball);
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: -2px;
+  margin-right: 5px;
+  flex: 0 0 auto;
+}
+
+/* ---------- Header ---------- */
 header.app-header {
   position: sticky;
   top: 0;
   z-index: 10;
-  background: var(--bg-elevated);
-  border-bottom: 1px solid var(--card-border);
-  padding: 14px 16px;
+  background:
+    linear-gradient(180deg, #6fb7ef 0%, #3f83c9 55%, #2a5f9e 100%);
+  border-bottom: 4px solid #17325e;
+  box-shadow: 0 4px 0 #0a1a3a;
+  padding: 16px 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
 }
 
+header.app-header::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 -4px 0;
+  height: 4px;
+  background: repeating-linear-gradient(90deg, #17325e 0 10px, #2a5f9e 10px 20px);
+}
+
 header.app-header h1 {
-  font-size: 1.1rem;
+  font-family: var(--font-pixel);
+  font-size: 0.95rem;
   margin: 0;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+  color: #fff8e0;
+  text-shadow: 2px 2px 0 #17325e;
+  letter-spacing: 0.02em;
 }
 
-header.app-header h1 .pokeball {
+header.app-header h1 .pokeball-icon {
   width: 22px;
   height: 22px;
+  filter: drop-shadow(2px 2px 0 #17325e);
 }
 
 .header-link {
-  font-size: 0.85rem;
-  color: var(--text-dim);
+  font-family: var(--font-pixel);
+  font-size: 0.6rem;
+  color: #17325e;
   text-decoration: none;
-  border: 1px solid var(--card-border);
-  padding: 6px 10px;
-  border-radius: 8px;
+  background: #fff8e0;
+  border: 2px solid #17325e;
+  padding: 8px 12px;
+  box-shadow: 2px 2px 0 #0a1a3a;
+  white-space: nowrap;
 }
 .header-link:hover {
-  color: var(--text);
-  border-color: var(--accent);
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 #0a1a3a;
 }
 
 main {
@@ -80,37 +134,52 @@ main {
   padding: 16px;
 }
 
+/* ---------- Filters ---------- */
 .filters {
   display: flex;
   gap: 8px;
   overflow-x: auto;
-  padding-bottom: 12px;
+  padding: 4px 2px 14px;
   margin-bottom: 12px;
 }
 
 .filter-btn {
   flex: 0 0 auto;
+  display: flex;
+  align-items: center;
   background: var(--card);
-  border: 1px solid var(--card-border);
+  border: 2px solid var(--card-border-soft);
   color: var(--text-dim);
-  padding: 7px 14px;
+  padding: 8px 14px;
   border-radius: 999px;
-  font-size: 0.85rem;
+  font-family: var(--font-pixel);
+  font-size: 0.6rem;
   cursor: pointer;
   white-space: nowrap;
 }
 
+.filter-btn::before {
+  content: '';
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  background-image: var(--icon-pokeball);
+  background-size: contain;
+  background-repeat: no-repeat;
+  margin-right: 7px;
+}
+
 .filter-btn.active {
-  background: var(--accent);
-  color: #08101f;
-  border-color: var(--accent);
-  font-weight: 600;
+  background: var(--yellow);
+  color: #3a2400;
+  border-color: #a86a00;
+  font-weight: 400;
 }
 
 .grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  gap: 14px;
 }
 
 @media (min-width: 480px) {
@@ -123,29 +192,36 @@ main {
   text-align: center;
   color: var(--text-dim);
   padding: 40px 16px;
+  font-family: var(--font-pixel);
+  font-size: 0.7rem;
+  line-height: 1.8;
 }
 
+/* ---------- Card ---------- */
 .poke-card {
-  background: var(--card);
-  border: 1px solid var(--card-border);
+  background: linear-gradient(180deg, var(--card) 0%, #0f1c3c 100%);
+  border: 2px solid var(--card-border);
   border-radius: var(--radius);
   overflow: hidden;
   cursor: pointer;
   position: relative;
-  transition: transform 0.15s ease, border-color 0.15s ease;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.35);
 }
 
 .poke-card:active {
-  transform: scale(0.97);
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.35);
 }
 
 .poke-card .img-wrap {
   aspect-ratio: 1 / 1;
-  background: var(--bg-elevated);
+  background: radial-gradient(circle at 50% 30%, #22407a 0%, #0d1830 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  border-bottom: 2px solid var(--card-border);
 }
 
 .poke-card img {
@@ -155,33 +231,59 @@ main {
 }
 
 .poke-card.emprestado img {
-  filter: grayscale(100%) brightness(0.7);
+  filter: grayscale(100%) brightness(0.6);
+}
+
+.badge-status,
+.badge-emprestado,
+.badge-venda {
+  position: absolute;
+  left: 8px;
+  display: flex;
+  align-items: center;
+  font-family: var(--font-pixel);
+  font-size: 0.45rem;
+  font-weight: 400;
+  padding: 4px 7px;
+  border-radius: 999px;
+  border: 2px solid rgba(0, 0, 0, 0.35);
+  letter-spacing: 0.02em;
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.35);
+  white-space: nowrap;
+}
+
+.badge-status,
+.badge-emprestado {
+  top: 8px;
+}
+
+.badge-status {
+  background: var(--green);
+  color: #073321;
 }
 
 .badge-emprestado {
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  background: rgba(20, 24, 36, 0.85);
-  color: var(--text);
-  font-size: 0.65rem;
-  font-weight: 700;
-  padding: 3px 8px;
-  border-radius: 999px;
-  border: 1px solid var(--card-border);
-  letter-spacing: 0.03em;
+  background: var(--orange);
+  color: #3a1a00;
 }
 
 .badge-venda {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background: var(--green);
-  color: #08101f;
-  font-size: 0.65rem;
-  font-weight: 700;
-  padding: 3px 8px;
-  border-radius: 999px;
+  top: 32px;
+  background: var(--teal);
+  color: #003b33;
+}
+
+.badge-status::before,
+.badge-emprestado::before,
+.badge-venda::before {
+  content: '';
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  background-image: var(--icon-pokeball);
+  background-size: contain;
+  background-repeat: no-repeat;
+  margin-right: 4px;
 }
 
 .poke-card .info {
@@ -189,12 +291,14 @@ main {
 }
 
 .poke-card .name {
-  font-weight: 600;
-  font-size: 0.92rem;
-  margin: 0 0 4px;
+  font-family: var(--font-pixel);
+  font-weight: 400;
+  font-size: 0.68rem;
+  margin: 0 0 8px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: var(--text);
 }
 
 .poke-card .meta {
@@ -205,13 +309,14 @@ main {
 }
 
 .pill {
-  font-size: 0.68rem;
-  font-weight: 700;
-  padding: 2px 8px;
+  font-family: var(--font-pixel);
+  font-size: 0.52rem;
+  font-weight: 400;
+  padding: 4px 8px;
   border-radius: 999px;
   background: var(--bg-elevated);
   color: var(--text-dim);
-  border: 1px solid var(--card-border);
+  border: 2px solid var(--card-border-soft);
 }
 
 .pill.level {
@@ -231,11 +336,11 @@ main {
   color: var(--text-dim);
 }
 
-/* Modal de detalhes */
+/* ---------- Modal de detalhes ---------- */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(5, 8, 15, 0.75);
+  background: rgba(4, 8, 20, 0.8);
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -247,11 +352,13 @@ main {
 }
 
 .modal-sheet {
-  background: var(--bg);
+  background: linear-gradient(180deg, #14254d 0%, #0a1330 100%);
   width: 100%;
   max-width: 640px;
   max-height: 92vh;
   overflow-y: auto;
+  border: 3px solid var(--card-border);
+  border-bottom: none;
   border-radius: 20px 20px 0 0;
   padding: 20px 16px 32px;
   position: relative;
@@ -267,15 +374,16 @@ main {
   position: absolute;
   top: 12px;
   right: 12px;
-  background: var(--card);
-  border: 1px solid var(--card-border);
-  color: var(--text);
+  background: var(--red);
+  border: 2px solid #3a0a05;
+  color: #fff;
   width: 32px;
   height: 32px;
-  border-radius: 999px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 1rem;
   line-height: 1;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
 }
 
 .detail-header {
@@ -283,6 +391,8 @@ main {
   gap: 14px;
   align-items: center;
   margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 2px dashed var(--card-border-soft);
 }
 
 .detail-header .img-wrap {
@@ -290,8 +400,8 @@ main {
   height: 84px;
   border-radius: 999px;
   overflow: hidden;
-  background: var(--card);
-  border: 2px solid var(--card-border);
+  background: radial-gradient(circle at 50% 30%, #22407a 0%, #0d1830 100%);
+  border: 3px solid var(--card-border);
   flex: 0 0 auto;
 }
 
@@ -302,39 +412,44 @@ main {
 }
 
 .detail-header.emprestado img {
-  filter: grayscale(100%) brightness(0.7);
+  filter: grayscale(100%) brightness(0.6);
 }
 
 .detail-header h2 {
-  margin: 0 0 4px;
-  font-size: 1.3rem;
+  margin: 0 0 8px;
+  font-family: var(--font-pixel);
+  font-size: 1.05rem;
+  color: var(--text);
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
 }
 
 .card-block {
   background: var(--card);
-  border: 1px solid var(--card-border);
+  border: 2px solid var(--card-border-soft);
   border-radius: var(--radius);
   padding: 12px 14px;
   margin-bottom: 10px;
 }
 
 .card-block .label {
-  font-size: 0.7rem;
+  font-family: var(--font-pixel);
+  font-size: 0.55rem;
   color: var(--text-dim);
-  text-transform: uppercase;
   letter-spacing: 0.04em;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .card-block .value {
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   font-weight: 700;
+  color: var(--text);
 }
 
 .bar-track {
   background: var(--bg-elevated);
+  border: 2px solid var(--card-border-soft);
   border-radius: 999px;
-  height: 8px;
+  height: 10px;
   overflow: hidden;
   margin-top: 8px;
 }
@@ -342,11 +457,11 @@ main {
 .bar-fill {
   height: 100%;
   border-radius: 999px;
-  background: var(--green);
+  background: repeating-linear-gradient(90deg, var(--green) 0 6px, #2fc17e 6px 12px);
 }
 
-.bar-fill.hp { background: var(--green); }
-.bar-fill.iv { background: var(--yellow); }
+.bar-fill.hp { background: repeating-linear-gradient(90deg, var(--green) 0 6px, #2fc17e 6px 12px); }
+.bar-fill.iv { background: repeating-linear-gradient(90deg, var(--yellow) 0 6px, #e0b53e 6px 12px); }
 
 .row-2 {
   display: grid;
@@ -360,9 +475,9 @@ main {
 }
 
 .attr-table td {
-  padding: 6px 0;
-  border-bottom: 1px solid var(--card-border);
-  font-size: 0.88rem;
+  padding: 7px 0;
+  border-bottom: 1px dashed var(--card-border-soft);
+  font-size: 1.05rem;
 }
 
 .attr-table tr:last-child td {
@@ -375,53 +490,68 @@ main {
 }
 
 .attr-table td.attr-value {
-  font-weight: 600;
+  font-weight: 700;
   text-align: right;
+  color: var(--text);
 }
 
 .section-title {
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-dim);
-  margin: 18px 0 8px;
+  font-family: var(--font-pixel);
+  font-size: 0.6rem;
+  color: var(--yellow);
+  margin: 20px 0 10px;
+  display: flex;
+  align-items: center;
+}
+
+.section-title::before {
+  content: '';
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background-image: var(--icon-pokeball);
+  background-size: contain;
+  background-repeat: no-repeat;
+  margin-right: 8px;
 }
 
 .status-banner {
   padding: 10px 14px;
   border-radius: var(--radius);
-  font-size: 0.9rem;
+  font-size: 1rem;
   margin-bottom: 14px;
   display: flex;
   align-items: center;
   gap: 8px;
+  border: 2px solid;
 }
 
 .status-banner.disponivel {
-  background: rgba(76, 217, 123, 0.12);
-  border: 1px solid rgba(76, 217, 123, 0.4);
+  background: rgba(61, 219, 143, 0.14);
+  border-color: var(--green);
   color: var(--green);
 }
 
 .status-banner.emprestado {
-  background: rgba(255, 92, 108, 0.12);
-  border: 1px solid rgba(255, 92, 108, 0.4);
+  background: rgba(255, 107, 94, 0.14);
+  border-color: var(--red);
   color: var(--red);
 }
 
 .venda-block {
-  background: linear-gradient(135deg, rgba(76, 217, 123, 0.14), rgba(76, 217, 123, 0.04));
-  border: 1px solid rgba(76, 217, 123, 0.35);
+  background: linear-gradient(135deg, rgba(51, 230, 200, 0.16), rgba(51, 230, 200, 0.04));
+  border: 2px solid var(--teal);
   border-radius: var(--radius);
   padding: 14px;
   margin-top: 14px;
 }
 
 .venda-block .preco {
-  font-size: 1.4rem;
-  font-weight: 800;
-  color: var(--green);
-  margin-bottom: 10px;
+  font-family: var(--font-pixel);
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: var(--teal);
+  margin-bottom: 12px;
 }
 
 .btn-whatsapp {
@@ -434,11 +564,13 @@ main {
   font-weight: 700;
   padding: 12px;
   border-radius: 10px;
+  border: 2px solid #0e7a3e;
   text-decoration: none;
-  font-size: 0.95rem;
+  font-size: 1rem;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
 }
 
-/* Admin */
+/* ---------- Admin ---------- */
 .login-wrap {
   max-width: 360px;
   margin: 60px auto;
@@ -448,6 +580,9 @@ main {
 .login-wrap h1 {
   text-align: center;
   margin-bottom: 24px;
+  font-family: var(--font-pixel);
+  font-size: 1rem;
+  color: var(--text);
 }
 
 .field {
@@ -456,9 +591,11 @@ main {
 
 .field label {
   display: block;
-  font-size: 0.82rem;
+  font-size: 0.85rem;
   color: var(--text-dim);
   margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .field input[type="text"],
@@ -469,22 +606,29 @@ main {
 .field textarea {
   width: 100%;
   background: var(--card);
-  border: 1px solid var(--card-border);
+  border: 2px solid var(--card-border-soft);
   color: var(--text);
   padding: 10px 12px;
-  border-radius: 10px;
-  font-size: 0.95rem;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+}
+
+.field input:focus,
+.field select:focus {
+  outline: none;
+  border-color: var(--accent);
 }
 
 .field input[type="file"] {
   width: 100%;
   color: var(--text-dim);
-  font-size: 0.85rem;
+  font-size: 0.9rem;
 }
 
 .field-error {
   color: var(--red);
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   margin-top: 6px;
 }
 
@@ -493,9 +637,9 @@ main {
   align-items: center;
   justify-content: space-between;
   background: var(--card);
-  border: 1px solid var(--card-border);
+  border: 2px solid var(--card-border-soft);
   padding: 12px 14px;
-  border-radius: 10px;
+  border-radius: 8px;
   margin-bottom: 12px;
 }
 
@@ -515,7 +659,7 @@ main {
 .switch .slider {
   position: absolute;
   inset: 0;
-  background: var(--card-border);
+  background: var(--card-border-soft);
   border-radius: 999px;
   cursor: pointer;
   transition: 0.15s;
@@ -546,26 +690,35 @@ main {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  background: var(--accent);
-  color: #08101f;
-  font-weight: 700;
-  border: none;
-  padding: 11px 16px;
-  border-radius: 10px;
+  background: var(--yellow);
+  color: #3a2400;
+  font-family: var(--font-pixel);
+  font-weight: 400;
+  border: 2px solid #a86a00;
+  padding: 12px 16px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 0.65rem;
   width: 100%;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
+}
+
+.btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.35);
 }
 
 .btn.secondary {
   background: transparent;
   color: var(--text);
-  border: 1px solid var(--card-border);
+  border: 2px solid var(--card-border-soft);
+  box-shadow: none;
 }
 
 .btn.danger {
   background: var(--red);
   color: #2a0407;
+  border-color: #7a0f05;
 }
 
 .admin-toolbar {
@@ -581,7 +734,7 @@ main {
   align-items: center;
   gap: 12px;
   background: var(--card);
-  border: 1px solid var(--card-border);
+  border: 2px solid var(--card-border-soft);
   border-radius: var(--radius);
   padding: 10px;
   margin-bottom: 10px;
@@ -593,6 +746,7 @@ main {
   border-radius: 10px;
   object-fit: cover;
   background: var(--bg-elevated);
+  border: 2px solid var(--card-border-soft);
 }
 
 .admin-list-item .grow {
@@ -615,7 +769,7 @@ main {
 
 .icon-btn {
   background: var(--bg-elevated);
-  border: 1px solid var(--card-border);
+  border: 2px solid var(--card-border-soft);
   color: var(--text);
   width: 34px;
   height: 34px;
@@ -644,10 +798,10 @@ main {
   left: 50%;
   transform: translateX(-50%);
   background: var(--card);
-  border: 1px solid var(--card-border);
+  border: 2px solid var(--card-border-soft);
   padding: 10px 18px;
   border-radius: 10px;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   z-index: 100;
 }
 
@@ -660,4 +814,6 @@ main {
   text-align: center;
   padding: 40px;
   color: var(--text-dim);
+  font-family: var(--font-pixel);
+  font-size: 0.7rem;
 }
